@@ -1,49 +1,55 @@
 # StemSplitter
 
-Professional-grade audio stem separation using AI. Isolate vocals, drums, bass, and other instruments from any audio file.
+macOS menu bar app for AI-powered audio stem separation. Uses [Demucs](https://github.com/facebookresearch/demucs) to split any audio file into vocals, drums, bass, and other instruments.
 
-## Features
+Appears as a 🎧 icon in your menu bar. Outputs MP3 stems to `~/Desktop/stems/`.
 
-- **High-Quality Separation** - AI-powered isolation with state-of-the-art models
-- **Batch Processing** - Process multiple files at once
-- **Multiple Formats** - Export as WAV or MP3
-- **Cross-Platform** - macOS 11+, Windows 10+, Linux
+## Requirements
+
+- macOS 11 (Big Sur) or later
+- Python 3.9+
+- ffmpeg (installed automatically by setup script if you have Homebrew)
+- ~2 GB disk space for PyTorch and the Demucs model
 
 ## Installation
 
-### macOS
-1. Download `StemSplitter.dmg` from [Releases](../../releases)
-2. Open and drag to Applications
-3. Right-click → Open (first launch only)
+```bash
+git clone https://github.com/your-username/stemsplitter.git
+cd stemsplitter
+bash setup_backend.sh
+```
 
-### Windows
-1. Download `StemSplitter-Setup.exe` from [Releases](../../releases)
-2. Run installer and follow prompts
+The setup script creates a virtual environment at `~/.stemsplitter/venv` and installs all Python dependencies. The first time you separate a file, Demucs will also download its model (~80 MB).
 
-### Linux
-1. Download `StemSplitter.AppImage` from [Releases](../../releases)
-2. Make executable: `chmod +x StemSplitter.AppImage`
-3. Run: `./StemSplitter.AppImage`
+## Running
 
-## Usage
+```bash
+python stemsplitter.py
+```
 
-1. Launch StemSplitter
-2. Drag & drop audio file onto the window
-3. Wait for AI processing (1-3 minutes depending on file length)
-4. Export individual stems as needed
+The 🎧 icon appears in your menu bar. Click it to:
+- **Separate Audio...** — pick any audio file (MP3, WAV, FLAC, etc.)
+- **2-Stem** — splits into vocals + instrumental
+- **4-Stem** — splits into vocals, drums, bass, other
 
-## System Requirements
+Processing takes 1–5 minutes depending on file length. When done, the output folder opens automatically.
 
-- **macOS:** 11.0 (Big Sur) or later
-- **Windows:** 10 or later (64-bit)
-- **Linux:** Ubuntu 20.04+ or equivalent
-- **RAM:** 4GB minimum, 8GB recommended
-- **Disk Space:** 500MB for app + ~5x source file size for stems
+## Building a .app bundle (optional)
+
+If you want a standalone `.app` that lives in Applications:
+
+```bash
+pip install py2app
+python setup.py py2app
+# Output: dist/StemSplitter.app
+```
+
+The bundled app still requires `~/.stemsplitter/venv` to be set up — run `setup_backend.sh` first.
 
 ## License
 
-Open source - MIT License
+MIT
 
 ---
 
-**Part of [PUBLIC WORKS](https://publicworks.design) - Open source audio tools for creators.**
+**Part of [PUBLIC WORKS](https://publicworks.design) — Open source audio tools for creators.**

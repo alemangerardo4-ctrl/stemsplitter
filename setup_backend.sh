@@ -66,9 +66,6 @@ echo "Installing Demucs..."
 echo "Installing rumps (menu bar framework)..."
 "$VENV_DIR/bin/pip" install rumps --quiet
 
-echo "Installing ffmpeg-python..."
-"$VENV_DIR/bin/pip" install ffmpeg-python --quiet
-
 # Validate
 echo ""
 echo "Validating installation..."
@@ -79,9 +76,9 @@ echo "=== Setup complete! ==="
 echo ""
 echo "To run StemSplitter:"
 echo "  source $VENV_DIR/bin/activate"
-echo "  python stemsplitter.py"
+echo "  python3 stemsplitter.py"
 echo ""
-echo "Or just run:  python stemsplitter.py"
+echo "Or just run:  python3 stemsplitter.py"
 echo "(it will auto-detect the venv at $VENV_DIR)"
 echo ""
 echo "Note: The first separation will download the Demucs model (~80 MB)."

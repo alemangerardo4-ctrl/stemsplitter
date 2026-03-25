@@ -2,4 +2,3 @@ demucs
 torch
 torchaudio
 rumps
-ffmpeg-python

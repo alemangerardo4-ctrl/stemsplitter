@@ -8,13 +8,14 @@ Appears as a 🎧 icon in your menu bar. Outputs MP3 stems to `~/Desktop/stems/`
 
 - macOS 11 (Big Sur) or later
 - Python 3.9+
-- ffmpeg (installed automatically by setup script if you have Homebrew)
-- ~2 GB disk space for PyTorch and the Demucs model
+- [Homebrew](https://brew.sh) (required for ffmpeg auto-install)
+- ffmpeg (installed automatically by setup script via Homebrew)
+- ~600 MB disk space for PyTorch and the Demucs model
 
 ## Installation
 
 ```bash
-git clone https://github.com/your-username/stemsplitter.git
+git clone https://github.com/alemangerardo4-ctrl/stemsplitter.git
 cd stemsplitter
 bash setup_backend.sh
 ```
@@ -24,7 +25,7 @@ The setup script creates a virtual environment at `~/.stemsplitter/venv` and ins
 ## Running
 
 ```bash
-python stemsplitter.py
+python3 stemsplitter.py
 ```
 
 The 🎧 icon appears in your menu bar. Click it to:

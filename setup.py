@@ -21,8 +21,8 @@ OPTIONS = {
         'CFBundleName': 'StemSplitter',
         'CFBundleDisplayName': 'StemSplitter',
         'CFBundleIdentifier': 'design.publicworks.stemsplitter',
-        'CFBundleVersion': '2.2.0',
-        'CFBundleShortVersionString': '2.2',
+        'CFBundleVersion': '2.2.1',
+        'CFBundleShortVersionString': '2.2.1',
         'LSUIElement': True,          # hide from Dock, show in menu bar only
         'NSHighResolutionCapable': True,
     },

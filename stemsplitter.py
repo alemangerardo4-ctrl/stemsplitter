@@ -51,21 +51,8 @@ def auto_setup_if_needed():
         )
         return False
 
-    r = _osascript(
-        'button returned of (display dialog '
-        '"StemSplitter needs to install its AI backend.\n\n'
-        'This is a one-time setup that downloads about 2 GB '
-        '(PyTorch + Demucs) and takes several minutes.\n'
-        'The app will launch automatically when complete.\n\n'
-        'Click Install to begin." '
-        'buttons {"Cancel", "Install"} default button "Install" '
-        'with title "StemSplitter \u2014 First-Time Setup")'
-    )
-    if r.returncode != 0 or r.stdout.strip() != 'Install':
-        return False
-
     _osascript(
-        'display notification "Installing StemSplitter backend. This will take several minutes..." '
+        'display notification "Setting up StemSplitter\u2026 This takes a few minutes." '
         'with title "StemSplitter" subtitle "First-time setup in progress"'
     )
 
@@ -73,7 +60,7 @@ def auto_setup_if_needed():
 
     if proc.returncode == 0:
         _osascript(
-            'display notification "StemSplitter is ready to use!" '
+            'display notification "StemSplitter is ready!" '
             'with title "StemSplitter" subtitle "Setup complete"'
         )
         return True

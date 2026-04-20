@@ -1,18 +1,92 @@
 #!/usr/bin/env python3
-import rumps, subprocess, threading, tempfile, os, sys
+import os
+import rumps
+import subprocess
+import threading
+import tempfile
+import sys
 from pathlib import Path
 
 VENV_PATH = Path.home() / ".stemsplitter" / "venv"
+VENV_PYTHON = VENV_PATH / "bin" / "python3"
+
 
 def find_venv_python():
-    # If already running inside a venv, use it directly
     if sys.prefix != sys.base_prefix:
         return Path(sys.prefix) / "bin" / "python3"
-    # Check standard install location
-    candidate = VENV_PATH / "bin" / "python3"
+    if VENV_PYTHON.exists():
+        return VENV_PYTHON
+    return None
+
+
+def _find_bundle_resource(filename):
+    """Find a resource file in the .app bundle Resources or alongside this script."""
+    resource_path = os.environ.get('RESOURCEPATH')
+    if resource_path:
+        candidate = Path(resource_path) / filename
+        if candidate.exists():
+            return candidate
+    candidate = Path(__file__).parent / filename
     if candidate.exists():
         return candidate
     return None
+
+
+def _osascript(script):
+    return subprocess.run(['osascript', '-e', script], capture_output=True, text=True)
+
+
+def auto_setup_if_needed():
+    """Run first-time backend setup if the venv is missing. Returns False to abort launch."""
+    if find_venv_python():
+        return True
+
+    setup_script = _find_bundle_resource('setup_backend.sh')
+    if not setup_script:
+        _osascript(
+            'display alert "StemSplitter \u2014 Setup Required" '
+            'message "The backend setup script was not found inside the app bundle. '
+            'Please re-download StemSplitter." '
+            'as critical buttons {"Quit"} default button "Quit"'
+        )
+        return False
+
+    r = _osascript(
+        'button returned of (display dialog '
+        '"StemSplitter needs to install its AI backend.\n\n'
+        'This is a one-time setup that downloads about 2 GB '
+        '(PyTorch + Demucs) and takes several minutes.\n'
+        'The app will launch automatically when complete.\n\n'
+        'Click Install to begin." '
+        'buttons {"Cancel", "Install"} default button "Install" '
+        'with title "StemSplitter \u2014 First-Time Setup")'
+    )
+    if r.returncode != 0 or r.stdout.strip() != 'Install':
+        return False
+
+    _osascript(
+        'display notification "Installing StemSplitter backend. This will take several minutes..." '
+        'with title "StemSplitter" subtitle "First-time setup in progress"'
+    )
+
+    proc = subprocess.run(['bash', str(setup_script)], capture_output=True, text=True)
+
+    if proc.returncode == 0:
+        _osascript(
+            'display notification "StemSplitter is ready to use!" '
+            'with title "StemSplitter" subtitle "Setup complete"'
+        )
+        return True
+
+    _osascript(
+        'display alert "StemSplitter Setup Failed" '
+        'message "Installation failed.\n\n'
+        'Please ensure Python 3.9+ and Homebrew are installed, then relaunch StemSplitter.\n\n'
+        '    brew install python ffmpeg" '
+        'as critical buttons {"OK"} default button "OK"'
+    )
+    return False
+
 
 class StemApp(rumps.App):
     def __init__(self):
@@ -119,5 +193,8 @@ class StemApp(rumps.App):
             self.title = "🎧"
             self.status.title = 'Status: Ready'
 
+
 if __name__ == '__main__':
+    if not auto_setup_if_needed():
+        sys.exit(0)
     StemApp().run()

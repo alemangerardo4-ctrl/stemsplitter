@@ -8,7 +8,7 @@
 #
 # Note: The app itself is a lightweight menu bar launcher. The heavy AI
 # backend (Demucs, PyTorch) lives in ~/.stemsplitter/venv and is NOT
-# bundled into the .app — users must run setup_backend.sh first.
+# bundled into the .app — it is installed automatically on first launch.
 
 from setuptools import setup
 
@@ -16,11 +16,13 @@ APP = ['stemsplitter.py']
 OPTIONS = {
     'argv_emulation': False,
     'packages': ['rumps'],
+    'resources': ['setup_backend.sh'],
     'plist': {
         'CFBundleName': 'StemSplitter',
         'CFBundleDisplayName': 'StemSplitter',
         'CFBundleIdentifier': 'design.publicworks.stemsplitter',
-        'CFBundleVersion': '1.0.0',
+        'CFBundleVersion': '2.2.0',
+        'CFBundleShortVersionString': '2.2',
         'LSUIElement': True,          # hide from Dock, show in menu bar only
         'NSHighResolutionCapable': True,
     },
